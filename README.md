@@ -2,22 +2,6 @@
 
 ---
 
-## 💡 The Solution: KaamKavach
-
-**KaamKavach** (*"Work Shield"*) bridges the trust and documentation gap through a unified, multilingual platform built specifically for low-literacy, mobile-first tradespeople and the contractors who hire them.
-
-### Core Pillars
-
-| Module | What It Does | Why It Matters |
-| :--- | :--- | :--- |
-| **1. Hybrid Skill Verification Engine** | Workers submit short practical video demonstrations alongside trade-specific tasks. Computer vision & AI pre-screen and structure the evidence, while **certified human assessors** validate competencies against standardized rubrics to issue granular **micro-credentials**. | Prevents AI hallucinations on physical safety/craftsmanship while keeping assessment scalable and tamper-proof. |
-| **2. Skill-to-Work Passport** | A dynamic, portable digital identity combining **practical video proof**, **assessor-backed credentials**, and **verified work logs**—accessible offline or online via a scannable **QR code** or secure link. | Turns an invisible daily-wage laborer into a verifiable professional with a growing, tamper-evident portfolio. |
-| **3. KaamVaani (Voice-First Assistant)** | Powered by **ElevenLabs STT/TTS + LLM structured extraction**, workers interact in regional Indian languages via natural speech to build profiles, understand assessment tasks, and log work. Users review and confirm extracted fields before saving. | Eliminates form-fatigue and literacy barriers—no typing or English proficiency required. |
-| **4. WorkReceipt (Digital Work Ledger)** | A two-party digital agreement & milestone tracker recording agreed wages, working hours, task scope, extra work, and payment receipts. | Protects workers from wage disputes and builds an indisputable ledger of real-world reliability. |
-| **5. Competency-Based Hiring** | Contractors filter and discover workers by **verified micro-credentials**, trade, proximity, and availability rather than unverified word-of-mouth. | Reduces contractor rework/hiring risk while rewarding skilled workers with fair market rates. |
-
----
-
 
 <div align="center">
 
@@ -66,39 +50,19 @@ India’s informal sector—electricians, plumbers, masons, carpenters, and cons
 
 ---
 
-## 💡 The Solution: 5 Integrated Pillars
+## 💡 The Solution: KaamKavach
 
-### 1. 🔍 Hybrid Skill Verification Engine
-* Workers record short practical task videos and complete trade-specific assessments.
-* **Computer Vision & AI** segment procedural steps and flag safety/tool checkpoints to assist review.
-* **Qualified Human Assessors** validate competencies against standardized trade rubrics and issue granular **Micro-Credentials**.
+**KaamKavach** (*"Work Shield"*) bridges the trust and documentation gap through a unified, multilingual platform built specifically for low-literacy, mobile-first tradespeople and the contractors who hire them.
 
-### 2. 🪪 Skill-to-Work Passport *(Core Innovation)*
-A portable, tamper-evident digital identity shareable via **QR Code or secure link**, unifying three independent pillars of truth:
+### Core Pillars
 
-```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       SKILL-TO-WORK PASSPORT (QR)                       │
-├─────────────────────────┬───────────────────────┬───────────────────────┤
-│   1. DEMONSTRATED       │   2. INDEPENDENT      │   3. ACKNOWLEDGED     │
-│      EVIDENCE           │      VALIDATION       │      WORK HISTORY     │
-├─────────────────────────┼───────────────────────┼───────────────────────┤
-│ • Practical trade video │ • Standardized rubric │ • WorkReceipt logs    │
-│ • Task execution steps  │ • AI pre-analysis     │ • Agreed vs. paid     │
-│ • Timestamped proof     │ • Human assessor sign │ • Employer sign-offs  │
-└─────────────────────────┴───────────────────────┴───────────────────────┘
-```
-
-### 3. 🎙️ KaamVaani — Multilingual Voice Assistant
-* Powered by **ElevenLabs (STT & TTS)** + **LLM Structured Extraction**, workers interact in regional Indian languages via natural voice.
-* Workers create profiles, hear assessment instructions, and log daily work hands-free—reviewing and confirming extracted cards before saving.
-
-### 4. 🧾 WorkReceipt — Digital Work Ledger
-* Allows workers and employers to record agreed wages, payment dates, hours, responsibilities, extra tasks, and completed milestones.
-* Protects worker earnings while building a verifiable employment track record.
-
-### 5. 🤝 Competency-Based Smart Matching
-* Enables contractors and employers to discover and hire workers based on **verified micro-credentials**, trade, location, experience, and real-time availability.
+| Module | What It Does | Why It Matters |
+| :--- | :--- | :--- |
+| **1. Hybrid Skill Verification Engine** | Workers submit short practical video demonstrations alongside trade-specific tasks. Computer vision & AI pre-screen and structure the evidence, while **certified human assessors** validate competencies against standardized rubrics to issue granular **micro-credentials**. | Prevents AI hallucinations on physical safety/craftsmanship while keeping assessment scalable and tamper-proof. |
+| **2. Skill-to-Work Passport** | A dynamic, portable digital identity combining **practical video proof**, **assessor-backed credentials**, and **verified work logs**—accessible offline or online via a scannable **QR code** or secure link. | Turns an invisible daily-wage laborer into a verifiable professional with a growing, tamper-evident portfolio. |
+| **3. KaamVaani (Voice-First Assistant)** | Powered by **ElevenLabs STT/TTS + LLM structured extraction**, workers interact in regional Indian languages via natural speech to build profiles, understand assessment tasks, and log work. Users review and confirm extracted fields before saving. | Eliminates form-fatigue and literacy barriers—no typing or English proficiency required. |
+| **4. WorkReceipt (Digital Work Ledger)** | A two-party digital agreement & milestone tracker recording agreed wages, working hours, task scope, extra work, and payment receipts. | Protects workers from wage disputes and builds an indisputable ledger of real-world reliability. |
+| **5. Competency-Based Hiring** | Contractors filter and discover workers by **verified micro-credentials**, trade, proximity, and availability rather than unverified word-of-mouth. | Reduces contractor rework/hiring risk while rewarding skilled workers with fair market rates. |
 
 ## 🏆 Key Innovation: The Tri-Verified Skill-to-Work Passport
 
