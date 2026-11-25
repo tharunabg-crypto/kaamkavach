@@ -82,6 +82,7 @@ Unlike static résumés, paper certificates, or unverified video portfolios, the
 
 
 ---
+
 <img width="1536" height="1024" alt="KaamKavach System Architecture Infographic" src="https://github.com/user-attachments/assets/a0500e0a-c42d-4c5b-b5fa-5c6272b418c9" />
 
 
