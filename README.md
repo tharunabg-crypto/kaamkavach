@@ -82,44 +82,8 @@ Unlike static résumés, paper certificates, or unverified video portfolios, the
 
 
 ---
+<img width="1536" height="1024" alt="KaamKavach System Architecture Infographic" src="https://github.com/user-attachments/assets/a0500e0a-c42d-4c5b-b5fa-5c6272b418c9" />
 
-## 🏗️ System Architecture
-
-```mermaid
-flowchart TD
-    subgraph Worker_Interface ["👷 Worker Experience (Mobile-First & Voice-Driven)"]
-        A["🎙️ KaamVaani Voice UI<br/>(ElevenLabs STT / TTS)"]
-        B["📹 Video & Task Submission"]
-        C["🪪 Skill-to-Work Passport (QR)"]
-    end
-
-    subgraph AI_Pipeline ["🧠 AI & Verification Layer"]
-        D["🤖 LLM Structured Extractor<br/>(Speech → Confirmed JSON Schema)"]
-        E["👁️ CV Pre-Screening & Evidence Tagging"]
-        F["🧑‍🏫 Human Assessor Portal<br/>(Standardized Trade Rubrics)"]
-    end
-
-    subgraph Core_Backend ["⚙️ FastAPI & Data Layer"]
-        G["⚡ Python FastAPI Backend"]
-        H[("🐘 PostgreSQL / Supabase<br/>(Profiles, Rubrics, WorkReceipts)")]
-        I[("☁️ Cloud Object Storage<br/>(Compressed Trade Videos)")]
-    end
-
-    subgraph Employer_Interface ["🏗️ Contractor / Employer Portal"]
-        J["🔍 Verified Skill Discovery"]
-        K["🧾 WorkReceipt Co-Signing & Ledger"]
-    end
-
-    A <-->|Regional Audio| D
-    D -->|Human-in-the-Loop Confirmation| G
-    B --> I
-    I --> E --> F
-    F -->|Issues Micro-Credential| G
-    G <--> H
-    H --> C
-    C <-->|QR Scan / Link| J
-    G <--> K
-```
 
 ---
 
