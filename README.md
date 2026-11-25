@@ -79,6 +79,11 @@ Unlike static résumés, paper certificates, or unverified video portfolios, the
 │ • Task execution steps  │ • AI pre-analysis     │ • Agreed vs. paid     │
 │ • Timestamped proof     │ • Human assessor sign │ • Employer sign-offs  │
 └─────────────────────────┴───────────────────────┴───────────────────────┘
+```
+---
+## System Architecture
+<img width="1536" height="1024" alt="KaamKavach System Architecture Infographic" src="https://github.com/user-attachments/assets/43aa3460-d717-4177-a9fa-f08d0e843db6" />
+
 
 ---
 
