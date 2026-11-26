@@ -3,25 +3,38 @@ import {
   Phone,
   ShieldCheck,
   ArrowRight,
-  HardHat,
-  Building2,
   AlertCircle,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Button, Card, Container, TextField } from '../components/ui';
+import { requestRemoteVerification } from '../services/kaamkavachService';
 
 export const SignInPage: React.FC = () => {
   const [identifier, setIdentifier] = useState('');
-  const [submittedNotice, setSubmittedNotice] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmittedNotice(true);
+    setIsSubmitting(true);
+    setFeedback(null);
+    const result = await requestRemoteVerification(identifier.trim());
+    setFeedback(
+      result.ok
+        ? `${result.data?.message ?? 'OTP request accepted.'} OTP verification and session creation are not implemented, so you are not signed in.`
+        : result.error ?? 'The sign-in request could not be completed.'
+    );
+    setIsSubmitting(false);
   };
 
   return (
     <main className="bg-drafting-grid min-h-[calc(100vh-4rem)] bg-[#F8F7F3] py-10 sm:py-16">
-      <div className="mx-auto max-w-md px-4 sm:px-6">
-        <div className="border border-[#173B78]/20 bg-white shadow-[0_18px_40px_-20px_rgba(23,59,120,0.2)]">
+      <Container size="narrow">
+        <Card
+          variant="raised"
+          padding="none"
+          className="overflow-hidden shadow-[0_18px_40px_-20px_rgba(23,59,120,0.2)]"
+        >
           <div className="border-b border-white/12 bg-[#173B78] px-6 py-5 text-white">
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-[#FF8A45]" />
@@ -38,78 +51,58 @@ export const SignInPage: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 p-6">
-            <div>
-              <label
-                htmlFor="signin-identifier"
-                className="block font-mono text-xs font-semibold uppercase tracking-wider text-[#173B78]"
-              >
-                Mobile Number or Passport ID
-              </label>
-              <div className="relative mt-2">
-                <Phone className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#173B78]/50" />
-                <input
-                  id="signin-identifier"
-                  type="text"
-                  inputMode="tel"
-                  required
-                  value={identifier}
-                  onChange={(e) => {
-                    setIdentifier(e.target.value);
-                    setSubmittedNotice(false);
-                  }}
-                  placeholder="+91 98XXX XXXXX or KK-EL-4829"
-                  className="min-h-[48px] w-full border border-[#173B78]/25 bg-[#F8F7F3] pr-4 pl-10 text-base text-[#102347] placeholder:text-[#102347]/40 focus:border-[#3478F6] focus:bg-white focus:outline-none"
-                />
-              </div>
-            </div>
+            <TextField
+              id="signin-identifier"
+              label="Mobile Number or Passport ID"
+              type="text"
+              inputMode="tel"
+              required
+              value={identifier}
+              onChange={(e) => {
+                setIdentifier(e.target.value);
+                setFeedback(null);
+              }}
+              placeholder="+91 98XXX XXXXX or KK-EL-4829"
+              leadingAdornment={<Phone className="h-4 w-4" />}
+            />
 
-            {submittedNotice && (
+            {feedback && (
               <div
                 role="status"
-                className="flex items-start gap-2.5 border border-[#FF8A45] bg-[#FF8A45]/10 p-3.5 text-xs leading-relaxed text-[#102347]"
+                className="flex items-start gap-2.5 rounded-control border border-status-warning/25 bg-status-warning-soft p-3.5 text-xs leading-relaxed text-status-warning"
               >
-                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#FF8A45]" />
-                <span>
-                  OTP verification could not be completed because no live
-                  account verification server is reachable from this device
-                  session. You can explore the Worker and Employer workspaces
-                  directly below.
-                </span>
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>{feedback}</span>
               </div>
             )}
 
-            <button
+            <Button
               type="submit"
-              className="flex min-h-[50px] w-full items-center justify-center gap-2 bg-[#173B78] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#3478F6]"
+              size="lg"
+              className="w-full"
+              disabled={isSubmitting}
             >
-              <span>Continue</span>
+              <span>{isSubmitting ? 'Contacting service…' : 'Request sign-in code'}</span>
               <ArrowRight className="h-4 w-4 text-[#FF8A45]" />
-            </button>
+            </Button>
+            <div className="flex flex-wrap justify-between gap-3 text-sm">
+              <Link to="/forgot-password" className="font-semibold text-electric hover:text-navy">
+                Forgot your password?
+              </Link>
+              <Link to="/register" className="font-semibold text-electric hover:text-navy">
+                Create a local profile
+              </Link>
+            </div>
           </form>
 
           <div className="border-t border-[#173B78]/12 bg-[#F8F7F3] p-6">
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#173B78]/70">
-              Direct Workspace Access
+            <p className="text-xs leading-relaxed text-text-muted">
+              Sign-in is not complete until an authentication provider and OTP
+              verification flow are connected.
             </p>
-            <div className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-              <Link
-                to="/worker"
-                className="flex min-h-[46px] items-center justify-center gap-2 border border-[#173B78]/20 bg-white px-3 text-xs font-bold text-[#173B78] hover:border-[#3478F6]"
-              >
-                <HardHat className="h-4 w-4 text-[#FF8A45]" />
-                <span>Worker View</span>
-              </Link>
-              <Link
-                to="/employer"
-                className="flex min-h-[46px] items-center justify-center gap-2 border border-[#173B78]/20 bg-white px-3 text-xs font-bold text-[#173B78] hover:border-[#3478F6]"
-              >
-                <Building2 className="h-4 w-4 text-[#3478F6]" />
-                <span>Employer View</span>
-              </Link>
-            </div>
           </div>
-        </div>
-      </div>
+        </Card>
+      </Container>
     </main>
   );
 };

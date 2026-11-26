@@ -24,7 +24,7 @@ const REALITY_PILLARS = [
 
 export const ImpactStatement: React.FC = () => {
   return (
-    <section className="bg-navy-drafting-grid relative border-b border-white/10 bg-[#173B78] py-14 text-white sm:py-20 lg:py-24">
+    <section className="section-space bg-navy-drafting-grid relative border-b border-white/10 bg-[#173B78] text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end">
           <motion.div

@@ -50,7 +50,12 @@ export interface WorkerProfile {
   whatsappAlertsEnabled: boolean;
 }
 
-export type WorkJobStatus = 'available' | 'accepted' | 'ongoing' | 'completed';
+export type WorkJobStatus =
+  | 'available'
+  | 'applied'
+  | 'accepted'
+  | 'ongoing'
+  | 'completed';
 
 export interface JobOpportunity {
   id: string;
@@ -68,6 +73,21 @@ export interface JobOpportunity {
   scheduleTime: string;
   postedAgo: string;
   status: WorkJobStatus;
+  startDate?: string;
+}
+
+export interface NewJobOpportunity {
+  title: string;
+  category: TradeCategoryId;
+  employerName: string;
+  location: string;
+  city: string;
+  dailyRate: number;
+  durationDays: number;
+  description: string;
+  requiredSkills: string[];
+  scheduleTime: string;
+  startDate?: string;
 }
 
 export type PaymentStatus = 'Agreed' | 'Pending Payment' | 'Paid';

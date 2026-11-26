@@ -34,7 +34,7 @@ export const ClosingCTA: React.FC<ClosingCTAProps> = ({
 
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              to="/get-started"
+              to="/register"
               className="inline-flex min-h-[50px] w-full items-center justify-center gap-2.5 bg-[#173B78] px-8 py-3.5 text-base font-bold text-white transition-colors hover:bg-[#3478F6] sm:w-auto"
             >
               <span>Get Started</span>

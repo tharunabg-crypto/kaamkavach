@@ -5,40 +5,64 @@ import {
   FileCheck2,
   Building2,
   ArrowLeftRight,
+  Plus,
 } from 'lucide-react';
-import { NavLink, Link } from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 import { BrandMark } from '../BrandMark';
+import { Badge } from '../ui';
+import { useAppState } from '../../context/AppStateContext';
 
 interface EmployerLayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const EMPLOYER_NAV = [
-  { to: '/employer', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/employer/workers', label: 'Find Workers', icon: Users, end: false },
-  { to: '/employer/agreements', label: 'WorkReceipts', icon: FileCheck2, end: false },
+  { to: '/employer/dashboard', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/employer/workers', label: 'Workers', icon: Users, end: false },
+  { to: '/employer/post-work', label: 'Post Work', icon: Plus, end: false, featured: true },
+  { to: '/employer/receipts', label: 'Records', icon: FileCheck2, end: false },
   { to: '/employer/profile', label: 'Profile', icon: Building2, end: false },
 ];
 
 export const EmployerLayout: React.FC<EmployerLayoutProps> = ({ children }) => {
+  const { employerProfile } = useAppState();
+  const page = children ?? <Outlet />;
+
   return (
-    <div className="min-h-screen bg-[#F8F7F3] text-[#102347]">
-      {/* Employer Header */}
-      <header className="safe-top sticky top-0 z-40 border-b border-[#173B78]/14 bg-[#173B78] text-white">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+    <div className="min-h-screen bg-cream text-ink">
+      <header className="safe-top sticky top-0 z-40 border-b border-navy/12 bg-white">
+        <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-[var(--layout-gutter)]">
           <div className="flex items-center gap-3">
-            <Link to="/" aria-label="Back to KaamKavach home">
-              <BrandMark inverted />
+            <Link to="/employer/dashboard" aria-label="KaamKavach employer dashboard">
+              <BrandMark />
             </Link>
-            <span className="hidden border-l border-white/20 pl-3 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#FF8A45] sm:inline-block">
-              Employer Portal
+            <span className="hidden border-l border-navy/15 pl-3 text-xs font-semibold text-text-muted sm:inline">
+              Employer workspace
             </span>
           </div>
 
-          <nav
-            aria-label="Employer Desktop Navigation"
-            className="hidden items-center gap-1 md:flex"
-          >
+          <div className="flex items-center gap-3">
+            <span className="hidden max-w-48 truncate text-sm font-semibold text-navy sm:inline">
+              {employerProfile.companyName}
+            </span>
+            <Badge tone="warning" className="hidden sm:inline-flex">
+              Sample data
+            </Badge>
+            <Link
+              to="/worker/home"
+              className="inline-flex min-h-10 items-center gap-1.5 rounded-control border border-navy/15 px-3 text-xs font-semibold text-navy transition-colors hover:bg-cream"
+            >
+              <ArrowLeftRight className="h-4 w-4" />
+              <span className="hidden sm:inline">Worker view</span>
+              <span className="sm:hidden">Worker</span>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <div className="mx-auto flex max-w-[1440px] gap-8 px-[var(--layout-gutter)]">
+        <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-60 shrink-0 flex-col border-r border-navy/10 py-7 md:flex">
+          <nav aria-label="Employer workspace" className="space-y-1">
             {EMPLOYER_NAV.map((item) => {
               const Icon = item.icon;
               return (
@@ -47,40 +71,40 @@ export const EmployerLayout: React.FC<EmployerLayoutProps> = ({ children }) => {
                   to={item.to}
                   end={item.end}
                   className={({ isActive }) =>
-                    `inline-flex min-h-[40px] items-center gap-1.5 px-3.5 py-2 text-xs font-semibold transition-colors ${
+                    `flex min-h-11 items-center gap-3 rounded-control px-3 text-sm font-semibold transition-colors ${
                       isActive
-                        ? 'bg-white text-[#173B78]'
-                        : 'text-white/80 hover:bg-white/10 hover:text-white'
+                        ? 'bg-navy text-white'
+                        : item.featured
+                          ? 'text-navy hover:bg-accent/15'
+                          : 'text-text-muted hover:bg-white hover:text-navy'
                     }`
                   }
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4 shrink-0" />
                   <span>{item.label}</span>
                 </NavLink>
               );
             })}
           </nav>
-
           <Link
-            to="/worker"
-            className="inline-flex min-h-[38px] items-center gap-1.5 border border-white/25 bg-white/10 px-3 text-xs font-semibold text-white hover:bg-white hover:text-[#173B78]"
+            to="/employer/agreements"
+            className="mt-4 flex min-h-11 items-center gap-3 rounded-control border border-navy/12 bg-white px-3 text-sm font-semibold text-navy hover:border-electric"
           >
-            <ArrowLeftRight className="h-3.5 w-3.5 text-[#FF8A45]" />
-            <span>Worker App</span>
+            <FileCheck2 className="h-4 w-4 text-electric" />
+            Agreements
           </Link>
-        </div>
-      </header>
+        </aside>
 
-      <div className="mx-auto max-w-6xl px-4 pt-5 pb-24 sm:px-6 md:pb-12">
-        {children}
+        <main className="min-w-0 flex-1 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-5 md:py-8">
+          {page}
+        </main>
       </div>
 
-      {/* Mobile Sticky Bottom Navigation */}
       <nav
-        aria-label="Employer Bottom Navigation"
-        className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-[#173B78]/18 bg-white/98 backdrop-blur-md md:hidden"
+        aria-label="Employer bottom navigation"
+        className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-navy/12 bg-white md:hidden"
       >
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-5">
           {EMPLOYER_NAV.map((item) => {
             const Icon = item.icon;
             return (
@@ -89,18 +113,20 @@ export const EmployerLayout: React.FC<EmployerLayoutProps> = ({ children }) => {
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  `flex min-h-[60px] flex-col items-center justify-center gap-1 py-2 text-[11px] font-semibold transition-colors ${
-                    isActive
-                      ? 'border-t-2 border-[#3478F6] bg-[#F8F7F3] text-[#173B78]'
-                      : 'text-[#102347]/65'
+                  `flex min-h-[58px] flex-col items-center justify-center gap-1 px-1 text-[10px] font-semibold ${
+                    isActive ? 'text-navy' : 'text-text-muted'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
-                    <Icon
-                      className={`h-5 w-5 ${isActive ? 'text-[#3478F6]' : ''}`}
-                    />
+                    <span
+                      className={`flex h-7 w-9 items-center justify-center rounded-full ${
+                        isActive ? 'bg-electric/10 text-electric' : ''
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </span>
                     <span>{item.label}</span>
                   </>
                 )}

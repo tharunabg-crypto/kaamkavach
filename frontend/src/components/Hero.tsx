@@ -53,7 +53,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateSection }) => {
             {/* Touch-Friendly Mobile-First CTAs */}
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link
-                to="/get-started"
+                to="/register"
                 className="inline-flex min-h-[50px] items-center justify-center gap-2.5 bg-[#173B78] px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-[#3478F6]"
               >
                 <span>Get Started</span>
@@ -62,10 +62,10 @@ export const Hero: React.FC<HeroProps> = ({ onNavigateSection }) => {
 
               <button
                 type="button"
-                onClick={() => onNavigateSection('how-it-works')}
+                onClick={() => onNavigateSection('for-workers')}
                 className="inline-flex min-h-[50px] items-center justify-center gap-2 border border-[#173B78]/25 bg-white px-6 py-3.5 text-base font-semibold text-[#173B78] transition-colors hover:border-[#173B78]"
               >
-                <span>Discover How It Works</span>
+                <span>Explore the workspaces</span>
                 <ArrowDown className="h-4 w-4 text-[#3478F6]" />
               </button>
             </div>

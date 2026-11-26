@@ -13,7 +13,7 @@ import type { WorkJobStatus } from '../../types/kaamkavach';
 import { WorkerLayout } from '../../components/worker/WorkerLayout';
 
 const STATUS_TABS: { id: WorkJobStatus; label: string }[] = [
-  { id: 'available', label: 'Available' },
+  { id: 'applied', label: 'Applied' },
   { id: 'accepted', label: 'Accepted' },
   { id: 'ongoing', label: 'Ongoing' },
   { id: 'completed', label: 'Completed' },
@@ -22,7 +22,7 @@ const STATUS_TABS: { id: WorkJobStatus; label: string }[] = [
 export const MyWorkPage: React.FC = () => {
   const { jobs, updateJobStatus, createWorkReceipt, workerProfile } =
     useAppState();
-  const [activeTab, setActiveTab] = useState<WorkJobStatus>('ongoing');
+  const [activeTab, setActiveTab] = useState<WorkJobStatus>('applied');
   const [notice, setNotice] = useState<string | null>(null);
 
   const tabJobs = jobs.filter((j) => j.status === activeTab);
@@ -38,11 +38,11 @@ export const MyWorkPage: React.FC = () => {
             My Work
           </h1>
           <p className="mt-1 text-sm text-[#102347]/75">
-            Track opportunities from acceptance through site execution and
-            WorkReceipt closure.
+            Track applications, accepted work, site execution, and WorkReceipt
+            closure.
           </p>
 
-          {/* 4-Stage Status Tabs */}
+          {/* Application and work status tabs */}
           <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
             {STATUS_TABS.map((tab) => {
               const count = jobs.filter((j) => j.status === tab.id).length;
@@ -91,7 +91,7 @@ export const MyWorkPage: React.FC = () => {
               No {activeTab} work items
             </p>
             <p className="mt-1 text-sm text-[#102347]/70">
-              Browse available jobs to accept new work into your schedule.
+              Browse opportunities to find your next job.
             </p>
             <Link
               to="/worker/find-work"
@@ -146,18 +146,10 @@ export const MyWorkPage: React.FC = () => {
                 </div>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2.5 border-t border-[#173B78]/10 pt-3.5">
-                  {job.status === 'available' && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        updateJobStatus(job.id, 'accepted');
-                        setNotice(`"${job.title}" moved to Accepted.`);
-                      }}
-                      className="inline-flex min-h-[42px] items-center gap-1.5 bg-[#3478F6] px-4 text-xs font-bold text-white hover:bg-[#173B78]"
-                    >
-                      <span>Accept Work</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </button>
+                  {job.status === 'applied' && (
+                    <p className="text-xs font-medium text-[#102347]/70">
+                      Saved in this browser preview; awaiting an employer response.
+                    </p>
                   )}
 
                   {job.status === 'accepted' && (

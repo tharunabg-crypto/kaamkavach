@@ -4,14 +4,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BrandMark } from './BrandMark';
 import { PwaInstallButton } from './PwaInstallButton';
+import { ButtonLink, Container } from './ui';
 
 interface NavbarProps {
   onNavigateSection: (sectionId: string) => void;
 }
 
 const NAV_LINKS = [
-  { label: 'Home', id: 'home' },
-  { label: 'How It Works', id: 'how-it-works' },
   { label: 'For Workers', id: 'for-workers' },
   { label: 'For Employers', id: 'for-employers' },
 ];
@@ -49,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
           : 'border-b border-[#173B78]/8 bg-[#F8F7F3]/90 backdrop-blur-xs'
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-18 sm:px-6 lg:px-8">
+      <Container className="flex h-16 items-center justify-between sm:h-18">
         <Link
           to="/"
           onClick={() => {
@@ -84,28 +83,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
         <div className="hidden items-center gap-3 lg:flex">
           <PwaInstallButton compact />
           <Link
-            to="/signin"
+            to="/sign-in"
             className="inline-flex min-h-[42px] items-center px-4 py-2 text-sm font-semibold text-[#173B78] transition-colors hover:bg-[#173B78]/6"
           >
             Sign In
           </Link>
-          <Link
-            to="/get-started"
-            className="inline-flex min-h-[42px] items-center gap-1.5 bg-[#173B78] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#3478F6]"
-          >
-            <span>Get Started</span>
+          <ButtonLink to="/register" size="md" className="gap-1.5 px-5">
+            <span>Register</span>
             <ArrowUpRight className="h-4 w-4 text-[#FF8A45]" />
-          </Link>
+          </ButtonLink>
         </div>
 
         {/* Mobile Actions + Hamburger */}
         <div className="flex items-center gap-2 lg:hidden">
-          <Link
-            to="/get-started"
-            className="inline-flex min-h-[40px] items-center bg-[#173B78] px-3.5 text-xs font-bold text-white"
-          >
-            Get Started
-          </Link>
+          <ButtonLink to="/register" size="sm" className="px-3.5">
+            Register
+          </ButtonLink>
           <button
             type="button"
             onClick={() => setMobileOpen((prev) => !prev)}
@@ -116,7 +109,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
-      </div>
+      </Container>
 
       {/* Responsive Mobile Menu Drawer */}
       <AnimatePresence>
@@ -150,16 +143,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigateSection }) => {
 
               <div className="grid grid-cols-2 gap-3 pt-4">
                 <Link
-                  to="/signin"
+                  to="/sign-in"
                   className="flex min-h-[48px] items-center justify-center border border-[#173B78]/25 bg-white text-sm font-semibold text-[#173B78]"
                 >
                   Sign In
                 </Link>
                 <Link
-                  to="/get-started"
+                  to="/register"
                   className="flex min-h-[48px] items-center justify-center bg-[#173B78] text-sm font-semibold text-white"
                 >
-                  Get Started
+                  Register
                 </Link>
               </div>
             </nav>

@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Hero } from '../components/Hero';
-import { ImpactStatement } from '../components/ImpactStatement';
-import { HowItWorks } from '../components/HowItWorks';
-import { FeaturesSection } from '../components/FeaturesSection';
 import { AudienceSection } from '../components/AudienceSection';
-import { ClosingCTA } from '../components/ClosingCTA';
 
 interface LandingPageProps {
   onNavigateSection: (sectionId: string) => void;
@@ -25,13 +21,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   }, [location.state, onNavigateSection]);
 
   return (
-    <main>
+    <main id="home">
       <Hero onNavigateSection={onNavigateSection} />
-      <ImpactStatement />
-      <HowItWorks />
-      <FeaturesSection />
       <AudienceSection />
-      <ClosingCTA onNavigateSection={onNavigateSection} />
     </main>
   );
 };

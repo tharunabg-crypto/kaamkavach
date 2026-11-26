@@ -3,11 +3,13 @@ import type {
   UserRole,
   WorkerProfile,
   WorkerSkill,
+  JobOpportunity,
   WorkReceipt,
   WorkJobStatus,
   EmployerProfile,
   PaymentStatus,
   TradeCategoryId,
+  NewJobOpportunity,
 } from '../types/kaamkavach';
 import {
   getInitialPersistedState,
@@ -22,6 +24,7 @@ interface AppStateContextValue extends PersistedAppState {
   updateWorkerProfile: (updates: Partial<WorkerProfile>) => void;
   addSelfDeclaredSkill: (name: string, category: TradeCategoryId) => void;
   updateJobStatus: (jobId: string, status: WorkJobStatus) => void;
+  createJob: (input: NewJobOpportunity) => JobOpportunity;
   createWorkReceipt: (input: {
     employerName: string;
     workerName: string;
@@ -113,6 +116,19 @@ export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({
     },
     []
   );
+
+  const createJob = useCallback((input: NewJobOpportunity) => {
+    const created: JobOpportunity = {
+      ...input,
+      id: `job-${Date.now()}`,
+      distanceKm: 0,
+      workReceiptIncluded: true,
+      postedAgo: 'Just now',
+      status: 'available',
+    };
+    setState((prev) => ({ ...prev, jobs: [created, ...prev.jobs] }));
+    return created;
+  }, []);
 
   const createWorkReceipt = useCallback(
     (input: {
@@ -268,6 +284,7 @@ export const AppStateProvider: React.FC<{ children: React.ReactNode }> = ({
         updateWorkerProfile,
         addSelfDeclaredSkill,
         updateJobStatus,
+        createJob,
         createWorkReceipt,
         confirmWorkReceiptSide,
         updateReceiptPaymentStatus,

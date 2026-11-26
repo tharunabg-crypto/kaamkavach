@@ -71,7 +71,9 @@ export const GetStartedPage: React.FC = () => {
         <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
           <button
             type="button"
-            onClick={() => navigate('/worker')}
+            onClick={() =>
+              navigate(`/register?role=worker&language=${selectedLang}`)
+            }
             className="group flex flex-col justify-between border-2 border-[#173B78] bg-white p-6 text-left transition-colors hover:bg-[#F8F7F3]"
           >
             <div>
@@ -94,7 +96,9 @@ export const GetStartedPage: React.FC = () => {
 
           <button
             type="button"
-            onClick={() => navigate('/employer')}
+            onClick={() =>
+              navigate(`/register?role=employer&language=${selectedLang}`)
+            }
             className="group flex flex-col justify-between border-2 border-[#173B78] bg-[#173B78] p-6 text-left text-white transition-colors hover:bg-[#0F2347]"
           >
             <div>

@@ -6,19 +6,19 @@ import {
   Mic,
   X,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppState } from '../../context/AppStateContext';
-import type { PaymentStatus, WorkReceipt } from '../../types/kaamkavach';
+import type { PaymentStatus } from '../../types/kaamkavach';
 import { WorkerLayout } from '../../components/worker/WorkerLayout';
 
 export const WorkReceiptPage: React.FC = () => {
   const { workReceipts, confirmWorkReceiptSide } = useAppState();
+  const { receiptId } = useParams();
+  const navigate = useNavigate();
   const [filterStatus, setFilterStatus] = useState<'all' | PaymentStatus>(
     'all'
   );
-  const [selectedReceipt, setSelectedReceipt] = useState<WorkReceipt | null>(
-    null
-  );
+  const selectedReceipt = workReceipts.find((receipt) => receipt.id === receiptId);
 
   const filtered =
     filterStatus === 'all'
@@ -179,13 +179,12 @@ export const WorkReceiptPage: React.FC = () => {
                         Confirm Record
                       </button>
                     )}
-                    <button
-                      type="button"
-                      onClick={() => setSelectedReceipt(rec)}
+                    <Link
+                      to={`/worker/receipts/${rec.id}`}
                       className="min-h-[38px] border border-[#173B78]/25 px-3.5 text-xs font-bold text-[#173B78]"
                     >
                       View Receipt
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </article>
@@ -201,7 +200,7 @@ export const WorkReceiptPage: React.FC = () => {
           aria-modal="true"
           aria-label="WorkReceipt Details"
           className="fixed inset-0 z-50 flex items-end justify-center bg-[#0F2347]/70 sm:items-center sm:p-4"
-          onClick={() => setSelectedReceipt(null)}
+          onClick={() => navigate('/worker/receipts')}
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -216,7 +215,7 @@ export const WorkReceiptPage: React.FC = () => {
               </div>
               <button
                 type="button"
-                onClick={() => setSelectedReceipt(null)}
+                onClick={() => navigate('/worker/receipts')}
                 aria-label="Close receipt modal"
                 className="p-1.5 text-[#173B78]"
               >
@@ -265,7 +264,7 @@ export const WorkReceiptPage: React.FC = () => {
 
             <button
               type="button"
-              onClick={() => setSelectedReceipt(null)}
+              onClick={() => navigate('/worker/receipts')}
               className="mt-6 min-h-[46px] w-full bg-[#173B78] font-bold text-white"
             >
               Done

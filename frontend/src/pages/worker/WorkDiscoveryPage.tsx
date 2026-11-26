@@ -4,7 +4,6 @@ import {
   MapPin,
   Clock,
   ShieldCheck,
-  X,
   CheckCircle2,
   SlidersHorizontal,
 } from 'lucide-react';
@@ -31,8 +30,6 @@ export const WorkDiscoveryPage: React.FC = () => {
   const [locationFilter, setLocationFilter] = useState<string>('all');
   const [rateFilter, setRateFilter] = useState<RateFilter>('all');
   const [durationFilter, setDurationFilter] = useState<DurationFilter>('all');
-  const [activeJob, setActiveJob] = useState<JobOpportunity | null>(null);
-  const [applyingId, setApplyingId] = useState<string | null>(null);
   const [appliedBanner, setAppliedBanner] = useState<string | null>(null);
 
   useEffect(() => {
@@ -107,15 +104,10 @@ export const WorkDiscoveryPage: React.FC = () => {
   };
 
   const handleApply = (job: JobOpportunity) => {
-    setApplyingId(job.id);
-    window.setTimeout(() => {
-      updateJobStatus(job.id, 'accepted');
-      setApplyingId(null);
-      setActiveJob(null);
-      setAppliedBanner(
-        `Accepted "${job.title}". Moved to Accepted in My Work.`
-      );
-    }, 320);
+    updateJobStatus(job.id, 'applied');
+    setAppliedBanner(
+      `"${job.title}" was saved to Applied in this browser preview. No application was sent to an employer.`
+    );
   };
 
   return (
@@ -368,20 +360,18 @@ export const WorkDiscoveryPage: React.FC = () => {
                     Est. ₹{(job.dailyRate * job.durationDays).toLocaleString('en-IN')}
                   </span>
                   <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setActiveJob(job)}
+                    <Link
+                      to={`/worker/jobs/${job.id}`}
                       className="min-h-[42px] border border-[#173B78]/25 px-3.5 text-xs font-bold text-[#173B78] hover:border-[#173B78]"
                     >
                       Details
-                    </button>
+                    </Link>
                     <button
                       type="button"
-                      disabled={applyingId === job.id}
                       onClick={() => handleApply(job)}
                       className="min-h-[42px] bg-[#3478F6] px-4 text-xs font-bold text-white transition-colors hover:bg-[#173B78] disabled:opacity-60"
                     >
-                      {applyingId === job.id ? 'Applying...' : 'Apply'}
+                      Save to Applied
                     </button>
                   </div>
                 </div>
@@ -391,121 +381,6 @@ export const WorkDiscoveryPage: React.FC = () => {
         )}
       </div>
 
-      {/* Mobile-First Job Details Modal / Bottom Sheet */}
-      {activeJob && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="job-modal-title"
-          className="fixed inset-0 z-50 flex items-end justify-center bg-[#0F2347]/70 sm:items-center sm:p-4"
-          onClick={() => setActiveJob(null)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="safe-bottom max-h-[90vh] w-full overflow-y-auto border-t-2 border-[#173B78] bg-white p-5 sm:max-w-lg sm:border-2 sm:p-6"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-[#3478F6]">
-                  {activeJob.employerName}
-                </span>
-                <h2
-                  id="job-modal-title"
-                  className="mt-1 font-display text-xl font-bold text-[#173B78]"
-                >
-                  {activeJob.title}
-                </h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => setActiveJob(null)}
-                aria-label="Close job details"
-                className="p-2 text-[#173B78]"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <div className="mt-4 grid grid-cols-3 divide-x divide-[#173B78]/12 border border-[#173B78]/15 bg-[#F8F7F3] py-3 text-center">
-              <div>
-                <p className="font-mono text-sm font-bold text-[#173B78]">
-                  ₹{activeJob.dailyRate}
-                </p>
-                <p className="text-[11px] text-[#102347]/70">Per Day</p>
-              </div>
-              <div>
-                <p className="font-mono text-sm font-bold text-[#173B78]">
-                  {activeJob.durationDays} Days
-                </p>
-                <p className="text-[11px] text-[#102347]/70">Duration</p>
-              </div>
-              <div>
-                <p className="font-mono text-sm font-bold text-[#FF8A45]">
-                  ₹
-                  {(
-                    activeJob.dailyRate * activeJob.durationDays
-                  ).toLocaleString('en-IN')}
-                </p>
-                <p className="text-[11px] text-[#102347]/70">Total</p>
-              </div>
-            </div>
-
-            <div className="mt-4 space-y-3 text-sm text-[#102347]/80">
-              <p>{activeJob.description}</p>
-              <div className="space-y-1.5 border-t border-[#173B78]/12 pt-3 font-mono text-xs">
-                <p>
-                  <span className="text-[#102347]/55">LOCATION: </span>
-                  {activeJob.location} ({activeJob.distanceKm} km)
-                </p>
-                <p>
-                  <span className="text-[#102347]/55">SHIFT HOURS: </span>
-                  {activeJob.scheduleTime}
-                </p>
-                <p>
-                  <span className="text-[#102347]/55">PROTECTION: </span>
-                  Co-signed WorkReceipt issued on acceptance
-                </p>
-              </div>
-
-              <div>
-                <p className="font-mono text-[11px] font-semibold uppercase text-[#173B78]/70">
-                  Required Skills
-                </p>
-                <div className="mt-1.5 flex flex-wrap gap-1.5">
-                  {activeJob.requiredSkills.map((s) => (
-                    <span
-                      key={s}
-                      className="border border-[#173B78]/20 bg-[#F8F7F3] px-2.5 py-1 text-xs font-semibold text-[#173B78]"
-                    >
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 flex gap-3">
-              <button
-                type="button"
-                onClick={() => setActiveJob(null)}
-                className="min-h-[48px] flex-1 border border-[#173B78]/25 font-semibold text-[#173B78]"
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                disabled={applyingId === activeJob.id}
-                onClick={() => handleApply(activeJob)}
-                className="min-h-[48px] flex-2 bg-[#173B78] px-6 font-bold text-white hover:bg-[#3478F6]"
-              >
-                {applyingId === activeJob.id
-                  ? 'Confirming...'
-                  : 'Apply & Accept Opportunity'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </WorkerLayout>
   );
 };

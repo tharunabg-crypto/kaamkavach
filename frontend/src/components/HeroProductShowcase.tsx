@@ -13,11 +13,16 @@ import {
   INITIAL_WORKER_PROFILE,
   INITIAL_WORKER_SKILLS,
   INITIAL_JOBS,
+  INITIAL_WORK_RECEIPTS,
 } from '../data/seedData';
+import { Badge } from './ui';
 
 export const HeroProductShowcase: React.FC = () => {
   const verifiedSkills = INITIAL_WORKER_SKILLS.filter(
     (s) => s.status === 'verified'
+  );
+  const declaredSkills = INITIAL_WORKER_SKILLS.filter(
+    (s) => s.status === 'self-declared'
   );
   const [selectedSkillId, setSelectedSkillId] = useState<string>(
     verifiedSkills[0]?.id ?? ''
@@ -37,7 +42,7 @@ export const HeroProductShowcase: React.FC = () => {
         <span className="h-2 w-2 rounded-full bg-[#FF8A45]" />
         <FileCheck2 className="h-4 w-4 text-[#173B78]" />
         <span className="font-mono text-[11px] font-semibold text-[#173B78]">
-          WORKRECEIPT PROTECTED · 24 RECORDS
+          SAMPLE RECORD · {INITIAL_WORK_RECEIPTS.length} WORKRECEIPTS
         </span>
       </motion.div>
 
@@ -56,9 +61,12 @@ export const HeroProductShowcase: React.FC = () => {
                 Digital Skill Passport
               </span>
             </div>
-            <span className="border border-white/25 bg-white/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-white">
-              Verified Identity
-            </span>
+            <Badge
+              tone="inverse"
+              className="text-[10px] uppercase tracking-wider"
+            >
+              Sample profile
+            </Badge>
           </div>
 
           <div className="mt-4 flex items-center justify-between gap-3">
@@ -149,7 +157,9 @@ export const HeroProductShowcase: React.FC = () => {
 
           <div className="mt-4 grid grid-cols-3 divide-x divide-[#173B78]/12 border border-[#173B78]/12 bg-[#F8F7F3] py-2.5 text-center">
             <div className="px-1">
-              <p className="font-mono text-xs font-bold text-[#173B78]">24</p>
+              <p className="font-mono text-xs font-bold text-[#173B78]">
+                {INITIAL_WORK_RECEIPTS.length}
+              </p>
               <p className="text-[11px] font-medium text-[#102347]/70">
                 WorkReceipts
               </p>
@@ -164,10 +174,10 @@ export const HeroProductShowcase: React.FC = () => {
             </div>
             <div className="px-1">
               <p className="font-mono text-xs font-bold text-[#3478F6]">
-                3 Verified
+                {verifiedSkills.length} Verified
               </p>
               <p className="text-[11px] font-medium text-[#102347]/70">
-                2 Declared
+                {declaredSkills.length} Declared
               </p>
             </div>
           </div>

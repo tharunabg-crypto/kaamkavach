@@ -5,19 +5,19 @@ import {
   Mic,
   Briefcase,
   User,
-  ShieldCheck,
-  FileCheck2,
   ArrowLeftRight,
+  ShieldCheck,
 } from 'lucide-react';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 import { BrandMark } from '../BrandMark';
+import { Badge } from '../ui';
 
 interface WorkerLayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const WORKER_NAV = [
-  { to: '/worker', label: 'Home', icon: Home, end: true },
+  { to: '/worker/home', label: 'Home', icon: Home, end: true },
   { to: '/worker/find-work', label: 'Find Work', icon: Search, end: false },
   { to: '/worker/kaamvaani', label: 'KaamVaani', icon: Mic, end: false, featured: true },
   { to: '/worker/my-work', label: 'My Work', icon: Briefcase, end: false },
@@ -25,27 +25,40 @@ const WORKER_NAV = [
 ];
 
 export const WorkerLayout: React.FC<WorkerLayoutProps> = ({ children }) => {
-  const { pathname } = useLocation();
+  const page = children ?? <Outlet />;
 
   return (
-    <div className="min-h-screen bg-[#F8F7F3] text-[#102347]">
-      {/* App Header */}
-      <header className="safe-top sticky top-0 z-40 border-b border-[#173B78]/14 bg-white/95 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+    <div className="min-h-screen bg-cream text-ink">
+      <header className="safe-top sticky top-0 z-40 border-b border-navy/12 bg-white">
+        <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-[var(--layout-gutter)]">
           <div className="flex items-center gap-3">
-            <Link to="/" aria-label="Back to KaamKavach home">
+            <Link to="/worker/home" aria-label="KaamKavach worker home">
               <BrandMark />
             </Link>
-            <span className="hidden border-l border-[#173B78]/20 pl-3 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#173B78]/70 sm:inline-block">
-              Worker App
+            <span className="hidden border-l border-navy/15 pl-3 text-xs font-semibold text-text-muted sm:inline">
+              Worker workspace
             </span>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav
-            aria-label="Worker Desktop Navigation"
-            className="hidden items-center gap-1 md:flex"
-          >
+          <div className="flex items-center gap-3">
+            <Badge tone="warning" className="hidden sm:inline-flex">
+              Sample data
+            </Badge>
+            <Link
+              to="/employer/dashboard"
+              className="inline-flex min-h-10 items-center gap-1.5 rounded-control border border-navy/15 px-3 text-xs font-semibold text-navy transition-colors hover:bg-cream"
+            >
+              <ArrowLeftRight className="h-4 w-4" />
+              <span className="hidden sm:inline">Employer view</span>
+              <span className="sm:hidden">Employer</span>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <div className="mx-auto flex max-w-[1440px] gap-8 px-[var(--layout-gutter)]">
+        <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-60 shrink-0 flex-col border-r border-navy/10 py-7 md:flex">
+          <nav aria-label="Worker workspace" className="space-y-1">
             {WORKER_NAV.map((item) => {
               const Icon = item.icon;
               return (
@@ -54,120 +67,62 @@ export const WorkerLayout: React.FC<WorkerLayoutProps> = ({ children }) => {
                   to={item.to}
                   end={item.end}
                   className={({ isActive }) =>
-                    `inline-flex min-h-[40px] items-center gap-1.5 px-3 py-2 text-xs font-semibold transition-colors ${
+                    `flex min-h-11 items-center gap-3 rounded-control px-3 text-sm font-semibold transition-colors ${
                       isActive
-                        ? 'bg-[#173B78] text-white'
+                        ? 'bg-navy text-white'
                         : item.featured
-                          ? 'border border-[#FF8A45] bg-[#FF8A45]/12 text-[#173B78] hover:bg-[#FF8A45] hover:text-[#0F2347]'
-                          : 'text-[#102347]/80 hover:bg-[#F8F7F3] hover:text-[#173B78]'
+                          ? 'text-navy hover:bg-accent/15'
+                          : 'text-text-muted hover:bg-white hover:text-navy'
                     }`
                   }
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4 shrink-0" />
                   <span>{item.label}</span>
                 </NavLink>
               );
             })}
           </nav>
+          <Link
+            to="/worker/skill-passport"
+            className="mt-4 flex min-h-11 items-center gap-3 rounded-control border border-navy/12 bg-white px-3 text-sm font-semibold text-navy hover:border-electric"
+          >
+            <ShieldCheck className="h-4 w-4 text-electric" />
+            Skill Passport
+          </Link>
+        </aside>
 
-          {/* Quick Passport, Receipts & Role Switch */}
-          <div className="flex items-center gap-2">
-            <Link
-              to="/worker/passport"
-              aria-label="Open Skill Passport"
-              className={`inline-flex min-h-[38px] items-center gap-1.5 border px-2.5 text-xs font-semibold transition-colors ${
-                pathname === '/worker/passport'
-                  ? 'border-[#3478F6] bg-[#3478F6] text-white'
-                  : 'border-[#173B78]/20 bg-[#F8F7F3] text-[#173B78] hover:border-[#3478F6]'
-              }`}
-            >
-              <ShieldCheck className="h-4 w-4 text-[#FF8A45]" />
-              <span className="hidden sm:inline">Passport</span>
-            </Link>
-            <Link
-              to="/worker/receipts"
-              aria-label="Open WorkReceipts"
-              className={`inline-flex min-h-[38px] items-center gap-1.5 border px-2.5 text-xs font-semibold transition-colors ${
-                pathname === '/worker/receipts'
-                  ? 'border-[#3478F6] bg-[#3478F6] text-white'
-                  : 'border-[#173B78]/20 bg-[#F8F7F3] text-[#173B78] hover:border-[#3478F6]'
-              }`}
-            >
-              <FileCheck2 className="h-4 w-4 text-[#3478F6]" />
-              <span className="hidden sm:inline">Receipts</span>
-            </Link>
-            <Link
-              to="/employer"
-              title="Switch to Employer Workspace"
-              className="inline-flex min-h-[38px] items-center gap-1 border border-[#173B78]/18 px-2.5 text-[11px] font-semibold text-[#173B78] hover:bg-[#173B78] hover:text-white"
-            >
-              <ArrowLeftRight className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Employer</span>
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Page Content */}
-      <div className="mx-auto max-w-6xl px-4 pt-5 pb-24 sm:px-6 md:pb-12">
-        {children}
+        <main className="min-w-0 flex-1 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-5 md:py-8">
+          {page}
+        </main>
       </div>
 
-      {/* Sticky Worker Bottom Navigation (Mobile-First) */}
       <nav
-        aria-label="Worker Bottom Navigation"
-        className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-[#173B78]/16 bg-white/98 backdrop-blur-md md:hidden"
+        aria-label="Worker bottom navigation"
+        className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-navy/12 bg-white md:hidden"
       >
-        <div className="grid grid-cols-5 items-end">
+        <div className="grid grid-cols-5">
           {WORKER_NAV.map((item) => {
             const Icon = item.icon;
-            if (item.featured) {
-              return (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className={({ isActive }) =>
-                    `flex min-h-[60px] flex-col items-center justify-center gap-0.5 py-1.5 text-[11px] font-bold ${
-                      isActive ? 'text-[#173B78]' : 'text-[#102347]/75'
-                    }`
-                  }
-                >
-                  {({ isActive }) => (
-                    <>
-                      <span
-                        className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition-colors ${
-                          isActive
-                            ? 'border-[#173B78] bg-[#FF8A45] text-[#0F2347]'
-                            : 'border-[#FF8A45] bg-[#173B78] text-white'
-                        }`}
-                      >
-                        <Icon className="h-5 w-5" />
-                      </span>
-                      <span>{item.label}</span>
-                    </>
-                  )}
-                </NavLink>
-              );
-            }
-
             return (
               <NavLink
                 key={item.to}
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  `flex min-h-[60px] flex-col items-center justify-center gap-1 py-2 text-[11px] font-semibold transition-colors ${
-                    isActive
-                      ? 'border-t-2 border-[#3478F6] bg-[#F8F7F3] text-[#173B78]'
-                      : 'text-[#102347]/65'
+                  `flex min-h-[58px] flex-col items-center justify-center gap-1 px-1 text-[10px] font-semibold ${
+                    isActive ? 'text-navy' : 'text-text-muted'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
-                    <Icon
-                      className={`h-5 w-5 ${isActive ? 'text-[#3478F6]' : ''}`}
-                    />
+                    <span
+                      className={`flex h-7 w-9 items-center justify-center rounded-full ${
+                        isActive ? 'bg-electric/10 text-electric' : ''
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </span>
                     <span>{item.label}</span>
                   </>
                 )}

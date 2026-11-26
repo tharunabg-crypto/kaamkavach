@@ -7,11 +7,11 @@ interface FooterProps {
   onNavigateSection: (sectionId: string) => void;
 }
 
-const FOOTER_NAV = [
-  { label: 'Home', id: 'home' },
-  { label: 'How It Works', id: 'how-it-works' },
-  { label: 'Features', id: 'features' },
-  { label: 'KaamVaani', id: 'kaamvaani' },
+const FOOTER_LINKS = [
+  { label: 'Home', to: '/' },
+  { label: 'Get started', to: '/get-started' },
+  { label: 'Create a worker profile', to: '/register?role=worker' },
+  { label: 'Create an employer profile', to: '/register?role=employer' },
 ];
 
 export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
@@ -49,15 +49,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
               Navigation
             </p>
             <ul className="mt-4 space-y-2.5">
-              {FOOTER_NAV.map((link) => (
-                <li key={link.id}>
-                  <button
-                    type="button"
-                    onClick={() => handleSection(link.id)}
-                    className="min-h-[36px] text-left text-sm text-white/80 transition-colors hover:text-white"
+              {FOOTER_LINKS.map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="inline-flex min-h-[36px] items-center text-sm text-white/80 transition-colors hover:text-white"
                   >
                     {link.label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -89,7 +88,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
               </li>
               <li>
                 <Link
-                  to="/worker"
+                  to="/worker/home"
                   className="inline-flex min-h-[36px] items-center text-sm text-white/80 transition-colors hover:text-white"
                 >
                   Worker Workspace
@@ -97,7 +96,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
               </li>
               <li>
                 <Link
-                  to="/employer"
+                  to="/employer/dashboard"
                   className="inline-flex min-h-[36px] items-center text-sm text-white/80 transition-colors hover:text-white"
                 >
                   Employer Workspace

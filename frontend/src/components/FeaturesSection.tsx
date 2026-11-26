@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import { INITIAL_WORK_RECEIPTS, TRADE_CATEGORIES } from '../data/seedData';
 import { CategoryIcon } from './common/CategoryIcon';
 import { KaamVaaniShowcase } from './KaamVaaniShowcase';
+import { SectionHeading } from './ui';
 
 export const FeaturesSection: React.FC = () => {
   const featuredReceipt = INITIAL_WORK_RECEIPTS[0];
@@ -22,21 +23,15 @@ export const FeaturesSection: React.FC = () => {
   return (
     <section
       id="features"
-      className="border-b border-[#173B78]/12 bg-white py-14 sm:py-20 lg:py-24"
+      className="section-space border-b border-[#173B78]/12 bg-white"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl">
-          <span className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-[#3478F6]">
-            Core Capabilities
-          </span>
-          <h2 className="mt-2.5 font-display text-3xl font-bold tracking-tight text-[#173B78] sm:text-4xl lg:text-[2.7rem]">
-            Built for skilled trades — from discovery to payment proof.
-          </h2>
-          <p className="mt-3 text-sm leading-relaxed text-[#102347]/75 sm:text-base">
-            Category-led work discovery paired with verifiable skill records,
-            co-signable WorkReceipts, and voice-first regional logging.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="Core Capabilities"
+          size="lg"
+          title="Built for skilled trades — from discovery to payment proof."
+          description="Category-led work discovery paired with verifiable skill records, co-signable WorkReceipts, and voice-first regional logging."
+        />
 
         <div className="mt-10 space-y-6 sm:mt-12">
           {/* ROW 1: Skill Verification + Skill Passport */}

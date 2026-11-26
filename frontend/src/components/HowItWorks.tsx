@@ -134,7 +134,7 @@ export const HowItWorks: React.FC = () => {
   return (
     <section
       id="how-it-works"
-      className="border-b border-[#173B78]/12 bg-[#F8F7F3] py-14 sm:py-20 lg:py-24"
+      className="section-space border-b border-[#173B78]/12 bg-[#F8F7F3]"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-end">
