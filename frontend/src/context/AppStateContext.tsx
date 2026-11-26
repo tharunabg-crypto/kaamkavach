@@ -3,7 +3,6 @@ import type {
   UserRole,
   WorkerProfile,
   WorkerSkill,
-  JobOpportunity,
   WorkReceipt,
   WorkJobStatus,
   EmployerProfile,

@@ -8,12 +8,19 @@ import {
   Plus,
 } from 'lucide-react';
 import {
-  WORKER_DIRECTORY,
+  DIRECTORY_WORKERS,
   INITIAL_WORK_RECEIPTS,
-  type WorkReceiptRecord,
-} from '../data/platformData';
+} from '../data/seedData';
+import type { WorkReceipt } from '../types/kaamkavach';
 
 type EmployerTab = 'discover' | 'agreements';
+
+const TRADE_CATEGORY_FILTER: Record<string, string> = {
+  Electrician: 'electrician',
+  Plumber: 'plumber',
+  Mason: 'construction',
+  Carpenter: 'carpenter',
+};
 
 const TRADES = ['All', 'Electrician', 'Plumber', 'Mason', 'Carpenter'];
 
@@ -21,20 +28,20 @@ export const EmployerWorkspacePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<EmployerTab>('discover');
   const [selectedTrade, setSelectedTrade] = useState<string>('All');
   const [onlyAvailable, setOnlyAvailable] = useState<boolean>(false);
-  const [agreements, setAgreements] = useState<WorkReceiptRecord[]>(
-    INITIAL_WORK_RECEIPTS
-  );
+  const [agreements, setAgreements] = useState<WorkReceipt[]>(INITIAL_WORK_RECEIPTS);
 
   // New WorkReceipt agreement form state
-  const [workerName, setWorkerName] = useState(WORKER_DIRECTORY[0].name);
+  const [workerName, setWorkerName] = useState(DIRECTORY_WORKERS[0].name);
   const [taskName, setTaskName] = useState('Electrical panel upgrade');
   const [days, setDays] = useState(5);
   const [rate, setRate] = useState(1100);
   const [agreementNote, setAgreementNote] = useState<string | null>(null);
 
-  const filteredWorkers = WORKER_DIRECTORY.filter((w) => {
-    const tradeMatch = selectedTrade === 'All' || w.trade === selectedTrade;
-    const availMatch = !onlyAvailable || w.availableNow;
+  const filteredWorkers = DIRECTORY_WORKERS.filter((w) => {
+    const tradeMatch =
+      selectedTrade === 'All' ||
+      w.category === TRADE_CATEGORY_FILTER[selectedTrade];
+    const availMatch = !onlyAvailable || w.availableForWork;
     return tradeMatch && availMatch;
   });
 
@@ -42,20 +49,30 @@ export const EmployerWorkspacePage: React.FC = () => {
     e.preventDefault();
     const cleanDays = Math.max(1, Number(days) || 1);
     const cleanRate = Math.max(0, Number(rate) || 0);
-    const created: WorkReceiptRecord = {
+    const selectedWorker =
+      DIRECTORY_WORKERS.find((worker) => worker.name === workerName) ??
+      DIRECTORY_WORKERS[0];
+    const created: WorkReceipt = {
       id: `emp-wr-${Date.now()}`,
       receiptNo: `WR-2026-${Math.floor(1000 + Math.random() * 8999)}`,
       dateRange: 'Scheduled Agreement',
-      worker: workerName,
-      contractor: 'Employer Workspace',
-      workTitle: taskName.trim() || 'Trade Scope',
+      employerName: 'Employer Workspace',
+      workerName: selectedWorker.name,
+      workerPassportId: selectedWorker.passportId,
+      workDescription: taskName.trim() || 'Trade Scope',
+      location: selectedWorker.location,
       durationDays: cleanDays,
       dailyRate: cleanRate,
       totalAmount: cleanDays * cleanRate,
-      status: 'Pending Employer Sign-off',
+      paymentStatus: 'Agreed',
+      workerConfirmed: false,
+      employerConfirmed: false,
+      createdVia: 'Employer Agreement',
     };
     setAgreements((prev) => [created, ...prev]);
-    setAgreementNote(`WorkReceipt ${created.receiptNo} drafted for ${workerName}.`);
+    setAgreementNote(
+      `WorkReceipt ${created.receiptNo} drafted for ${selectedWorker.name}.`
+    );
   };
 
   return (
@@ -154,40 +171,42 @@ export const EmployerWorkspacePage: React.FC = () => {
                             {worker.name}
                           </h2>
                           <p className="text-xs font-medium text-[#102347]/70">
-                            {worker.trade} · {worker.experience} exp
+                            {worker.profession} · {worker.experienceYears} years
                           </p>
                         </div>
                       </div>
                       <span className="shrink-0 border border-[#173B78]/15 bg-[#F8F7F3] px-2 py-0.5 font-mono text-xs font-bold text-[#173B78]">
-                        {worker.rubricScore}
+                        {worker.reliabilityScore}
                       </span>
                     </div>
 
                     <div className="mt-3 flex flex-wrap items-center gap-3 font-mono text-[11px] text-[#102347]/70">
                       <span className="inline-flex items-center gap-1">
                         <MapPin className="h-3 w-3 text-[#FF8A45]" />
-                        {worker.distance}
+                        {worker.distanceKm} km
                       </span>
                       <span>Passport: {worker.passportId}</span>
-                      <span>{worker.dailyRate}</span>
+                      <span>₹{worker.dailyRate.toLocaleString('en-IN')}/day</span>
                     </div>
 
                     <div className="mt-3 flex flex-wrap gap-1.5">
-                      {worker.verifiedSkills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="inline-flex items-center gap-1 border border-[#3478F6]/30 bg-[#3478F6]/8 px-2 py-0.5 text-[11px] font-semibold text-[#173B78]"
-                        >
-                          <CheckCircle2 className="h-3 w-3 text-[#3478F6]" />
-                          {skill}
-                        </span>
-                      ))}
+                      {worker.skills
+                        .filter((skill) => skill.status === 'verified')
+                        .map((skill) => (
+                          <span
+                            key={skill.id}
+                            className="inline-flex items-center gap-1 border border-[#3478F6]/30 bg-[#3478F6]/8 px-2 py-0.5 text-[11px] font-semibold text-[#173B78]"
+                          >
+                            <CheckCircle2 className="h-3 w-3 text-[#3478F6]" />
+                            {skill.name}
+                          </span>
+                        ))}
                     </div>
                   </div>
 
                   <div className="mt-4 flex items-center justify-between border-t border-[#173B78]/10 pt-3">
                     <span className="font-mono text-[11px] text-[#102347]/65">
-                      {worker.completedReceipts} WorkReceipts
+                      {worker.completedJobs} WorkReceipts
                     </span>
                     <button
                       type="button"
@@ -232,9 +251,9 @@ export const EmployerWorkspacePage: React.FC = () => {
                   onChange={(e) => setWorkerName(e.target.value)}
                   className="mt-1.5 min-h-[46px] w-full border border-[#173B78]/25 bg-[#F8F7F3] px-3 text-sm font-semibold text-[#102347]"
                 >
-                  {WORKER_DIRECTORY.map((w) => (
+                  {DIRECTORY_WORKERS.map((w) => (
                     <option key={w.id} value={w.name}>
-                      {w.name} ({w.trade})
+                      {w.name} ({w.profession})
                     </option>
                   ))}
                 </select>
@@ -337,16 +356,16 @@ export const EmployerWorkspacePage: React.FC = () => {
                       {rec.receiptNo}
                     </span>
                     <span className="border border-[#3478F6]/40 bg-[#3478F6]/10 px-2 py-0.5 font-mono text-[11px] font-semibold text-[#173B78]">
-                      {rec.status}
+                      {rec.paymentStatus}
                     </span>
                   </div>
                   <div className="mt-2.5 flex items-end justify-between gap-3">
                     <div>
                       <p className="font-display text-base font-bold text-[#102347]">
-                        {rec.workTitle}
+                        {rec.workDescription}
                       </p>
                       <p className="text-xs text-[#102347]/70">
-                        Worker: {rec.worker} · {rec.durationDays} days × ₹
+                        Worker: {rec.workerName} · {rec.durationDays} days × ₹
                         {rec.dailyRate}
                       </p>
                     </div>

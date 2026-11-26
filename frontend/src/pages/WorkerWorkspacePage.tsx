@@ -12,41 +12,53 @@ import {
   Plus,
 } from 'lucide-react';
 import {
-  FEATURED_WORKER,
-  VERIFIED_CREDENTIALS,
+  INITIAL_WORKER_PROFILE,
+  INITIAL_WORKER_SKILLS,
   INITIAL_WORK_RECEIPTS,
-  MATCHED_OPPORTUNITIES,
-  KAAMVAANI_SCENARIOS,
-  type WorkReceiptRecord,
-} from '../data/platformData';
+  INITIAL_JOBS,
+  VOICE_LANGUAGES,
+} from '../data/seedData';
+import type { WorkReceipt } from '../types/kaamkavach';
 
 type WorkerTab = 'passport' | 'kaamvaani' | 'receipts' | 'jobs';
+
+const VERIFIED_SKILLS = INITIAL_WORKER_SKILLS.filter(
+  (skill) => skill.status === 'verified'
+);
+
+const MATCHED_OPPORTUNITIES = INITIAL_JOBS.filter(
+  (job) =>
+    job.status === 'available' &&
+    job.requiredSkills.some((requiredSkill) =>
+      VERIFIED_SKILLS.some((skill) =>
+        skill.name.toLowerCase().includes(requiredSkill.toLowerCase())
+      )
+    )
+);
 
 export const WorkerWorkspacePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<WorkerTab>('passport');
   const [qrOpen, setQrOpen] = useState(false);
-  const [receipts, setReceipts] = useState<WorkReceiptRecord[]>(
-    INITIAL_WORK_RECEIPTS
-  );
+  const [receipts, setReceipts] = useState<WorkReceipt[]>(INITIAL_WORK_RECEIPTS);
 
   // KaamVaani voice entry state inside Worker Workspace
   const [langId, setLangId] = useState('hindi');
   const activeScenario =
-    KAAMVAANI_SCENARIOS.find((s) => s.id === langId) ?? KAAMVAANI_SCENARIOS[0];
-  const [employer, setEmployer] = useState(activeScenario.employer);
-  const [work, setWork] = useState(activeScenario.work);
-  const [days, setDays] = useState(activeScenario.durationDays);
-  const [rate, setRate] = useState(activeScenario.dailyRate);
+    VOICE_LANGUAGES.find((s) => s.id === langId) ?? VOICE_LANGUAGES[0];
+  const [employer, setEmployer] = useState(activeScenario.parsedEmployer);
+  const [work, setWork] = useState(activeScenario.parsedWork);
+  const [days, setDays] = useState(activeScenario.parsedDays);
+  const [rate, setRate] = useState(activeScenario.parsedRate);
   const [savedToast, setSavedToast] = useState<string | null>(null);
 
   const handleSelectScenario = (id: string) => {
     setLangId(id);
     const next =
-      KAAMVAANI_SCENARIOS.find((s) => s.id === id) ?? KAAMVAANI_SCENARIOS[0];
-    setEmployer(next.employer);
-    setWork(next.work);
-    setDays(next.durationDays);
-    setRate(next.dailyRate);
+      VOICE_LANGUAGES.find((s) => s.id === id) ?? VOICE_LANGUAGES[0];
+    setEmployer(next.parsedEmployer);
+    setWork(next.parsedWork);
+    setDays(next.parsedDays);
+    setRate(next.parsedRate);
     setSavedToast(null);
   };
 
@@ -54,17 +66,22 @@ export const WorkerWorkspacePage: React.FC = () => {
     e.preventDefault();
     const cleanDays = Math.max(1, Number(days) || 1);
     const cleanRate = Math.max(0, Number(rate) || 0);
-    const newEntry: WorkReceiptRecord = {
+    const newEntry: WorkReceipt = {
       id: `wr-${Date.now()}`,
       receiptNo: `WR-2026-${Math.floor(1000 + Math.random() * 8999)}`,
       dateRange: 'Today',
-      worker: FEATURED_WORKER.name,
-      contractor: employer.trim() || 'Employer',
-      workTitle: work.trim() || 'Trade Work',
+      employerName: employer.trim() || 'Employer',
+      workerName: INITIAL_WORKER_PROFILE.name,
+      workerPassportId: INITIAL_WORKER_PROFILE.passportId,
+      workDescription: work.trim() || 'Trade Work',
+      location: INITIAL_WORKER_PROFILE.location,
       durationDays: cleanDays,
       dailyRate: cleanRate,
       totalAmount: cleanDays * cleanRate,
-      status: 'Drafted via KaamVaani',
+      paymentStatus: 'Agreed',
+      workerConfirmed: true,
+      employerConfirmed: false,
+      createdVia: 'KaamVaani',
     };
     setReceipts((prev) => [newEntry, ...prev]);
     setSavedToast(`WorkReceipt ${newEntry.receiptNo} added to Receipts`);
@@ -80,17 +97,17 @@ export const WorkerWorkspacePage: React.FC = () => {
         <div className="flex flex-col gap-4 border border-[#173B78]/20 bg-[#173B78] p-4 text-white sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div className="flex items-center gap-3.5">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-[#FF8A45] bg-[#0F2347] font-display text-lg font-bold text-white">
-              {FEATURED_WORKER.initials}
+              {INITIAL_WORKER_PROFILE.initials}
             </div>
             <div>
               <p className="font-mono text-[11px] uppercase tracking-wider text-[#FF8A45]">
-                Worker Workspace · {FEATURED_WORKER.passportId}
+                Worker Workspace · {INITIAL_WORKER_PROFILE.passportId}
               </p>
               <h1 className="font-display text-xl font-bold text-white sm:text-2xl">
-                {FEATURED_WORKER.name}
+                {INITIAL_WORKER_PROFILE.name}
               </h1>
               <p className="text-xs text-white/80">
-                {FEATURED_WORKER.trade} · {FEATURED_WORKER.city}
+                {INITIAL_WORKER_PROFILE.profession} · {INITIAL_WORKER_PROFILE.city}
               </p>
             </div>
           </div>
@@ -165,7 +182,7 @@ export const WorkerWorkspacePage: React.FC = () => {
             <div className="grid grid-cols-3 divide-x divide-[#173B78]/12 border border-[#173B78]/16 bg-white py-3.5 text-center">
               <div>
                 <p className="font-mono text-base font-bold text-[#173B78]">
-                  {VERIFIED_CREDENTIALS.length}
+                  {VERIFIED_SKILLS.length}
                 </p>
                 <p className="text-[11px] font-medium text-[#102347]/70">
                   Verified Skills
@@ -193,9 +210,9 @@ export const WorkerWorkspacePage: React.FC = () => {
               <h2 className="font-display text-lg font-bold text-[#173B78]">
                 Verified Skill Credentials
               </h2>
-              {VERIFIED_CREDENTIALS.map((cred) => (
+              {VERIFIED_SKILLS.map((skill) => (
                 <div
-                  key={cred.id}
+                  key={skill.id}
                   className="border border-[#173B78]/16 bg-white p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -203,20 +220,20 @@ export const WorkerWorkspacePage: React.FC = () => {
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#3478F6]" />
                       <div>
                         <p className="text-sm font-bold text-[#102347] sm:text-base">
-                          {cred.name}
+                          {skill.name}
                         </p>
                         <div className="mt-1 flex flex-wrap items-center gap-3 font-mono text-xs text-[#102347]/65">
                           <span className="inline-flex items-center gap-1">
                             <Video className="h-3.5 w-3.5 text-[#FF8A45]" />
-                            {cred.evidenceDuration}
+                            {skill.evidenceDuration}
                           </span>
-                          <span>{cred.verifiedBy}</span>
-                          <span>{cred.rubricCode}</span>
+                          {skill.assessorNote && <span>{skill.assessorNote}</span>}
+                          {skill.rubricCode && <span>{skill.rubricCode}</span>}
                         </div>
                       </div>
                     </div>
                     <span className="shrink-0 border border-[#173B78]/15 bg-[#F8F7F3] px-2.5 py-1 font-mono text-xs font-bold text-[#173B78]">
-                      {cred.score}
+                      {skill.score}
                     </span>
                   </div>
                 </div>
@@ -244,7 +261,7 @@ export const WorkerWorkspacePage: React.FC = () => {
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {KAAMVAANI_SCENARIOS.map((s) => (
+              {VOICE_LANGUAGES.map((s) => (
                 <button
                   key={s.id}
                   type="button"
@@ -255,17 +272,17 @@ export const WorkerWorkspacePage: React.FC = () => {
                       : 'border-[#173B78]/18 bg-[#F8F7F3] text-[#102347]'
                   }`}
                 >
-                  {s.nativeLabel} · {s.language}
+                  {s.nativeLabel} · {s.label}
                 </button>
               ))}
             </div>
 
             <div className="mt-4 border-l-2 border-[#FF8A45] bg-[#F8F7F3] p-3.5">
               <p className="font-display text-sm font-semibold text-[#173B78] sm:text-base">
-                {activeScenario.spokenTranscript}
+                {activeScenario.promptPhrase}
               </p>
               <p className="mt-1 text-xs text-[#102347]/70">
-                {activeScenario.englishTranslation}
+                {activeScenario.translation}
               </p>
             </div>
 
@@ -389,16 +406,16 @@ export const WorkerWorkspacePage: React.FC = () => {
                     {rec.receiptNo} · {rec.dateRange}
                   </span>
                   <span className="border border-[#3478F6]/40 bg-[#3478F6]/10 px-2 py-0.5 font-mono text-[11px] font-semibold text-[#173B78]">
-                    {rec.status}
+                    {rec.paymentStatus}
                   </span>
                 </div>
                 <div className="mt-3 flex items-end justify-between gap-3">
                   <div>
                     <p className="font-display text-base font-bold text-[#102347]">
-                      {rec.workTitle}
+                      {rec.workDescription}
                     </p>
                     <p className="text-xs text-[#102347]/70">
-                      Employer: {rec.contractor} · {rec.durationDays} days × ₹
+                      Employer: {rec.employerName} · {rec.durationDays} days × ₹
                       {rec.dailyRate}
                     </p>
                   </div>
@@ -428,22 +445,22 @@ export const WorkerWorkspacePage: React.FC = () => {
                       {opp.title}
                     </p>
                     <p className="mt-0.5 text-xs text-[#102347]/75">
-                      {opp.contractor} · {opp.duration}
+                      {opp.employerName} · {opp.durationDays} days
                     </p>
                   </div>
                   <span className="shrink-0 bg-[#173B78] px-2.5 py-1 font-mono text-xs font-semibold text-white">
-                    {opp.rate}
+                    ₹{opp.dailyRate.toLocaleString('en-IN')}/day
                   </span>
                 </div>
 
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[#173B78]/10 pt-3 text-xs">
                   <span className="inline-flex items-center gap-1 font-mono text-[#102347]/70">
                     <MapPin className="h-3.5 w-3.5 text-[#FF8A45]" />
-                    {opp.location} ({opp.distance})
+                    {opp.location} ({opp.distanceKm} km)
                   </span>
                   <span className="inline-flex items-center gap-1 font-semibold text-[#3478F6]">
                     <ShieldCheck className="h-3.5 w-3.5" />
-                    Matched: {opp.requiredSkill}
+                    Matched: {opp.requiredSkills.join(', ')}
                   </span>
                 </div>
               </div>
@@ -504,7 +521,7 @@ export const WorkerWorkspacePage: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <span className="font-mono text-xs font-bold uppercase text-[#173B78]">
-                {FEATURED_WORKER.passportId}
+                {INITIAL_WORKER_PROFILE.passportId}
               </span>
               <button
                 type="button"
@@ -519,10 +536,10 @@ export const WorkerWorkspacePage: React.FC = () => {
               <QrCode className="h-32 w-32 stroke-[1.4]" />
             </div>
             <p className="font-display text-lg font-bold text-[#173B78]">
-              {FEATURED_WORKER.name}
+              {INITIAL_WORKER_PROFILE.name}
             </p>
             <p className="text-xs text-[#102347]/70">
-              {FEATURED_WORKER.trade} · {VERIFIED_CREDENTIALS.length} Verified
+              {INITIAL_WORKER_PROFILE.profession} · {VERIFIED_SKILLS.length} Verified
               Skills
             </p>
           </div>
